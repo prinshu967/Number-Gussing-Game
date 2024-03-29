@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number Guessing Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #a89696;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            text-align: center;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input[type="number"] {
+            padding: 8px;
+            margin: 5px;
+            width: 80px;
+        }
+
+        button {
+            padding: 8px 20px;
+            margin-top: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        p#error {
+            color: red;
+            text-align: center;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Number Guessing Game</h1>
+        <p>Guess The Number from 1 To 20</p>
+        <p>You Are Given 10 chances to Guess</p>
+        <p>If you guess the number in less than 5 attempts, You win the game</p>
+        <form id="guessForm">
+            <label for="guessInput">Enter Your Guess:</label>
+            <input type="number" id="guessInput" name="guess" min="1" max="20" required>
+            <button type="button" onclick="guessNumber()">Submit Guess</button>
+        </form>
+        <p id="result"></p>
+        <button onclick="restartGame()">Restart Game</button>
+    </div>
+
+    <script>
+        var num = Math.floor(Math.random() * 20) + 1;
+        var attempts = 10;
+        var successAttempts = 5;
+
+        function guessNumber() {
+            var guessInput = document.getElementById('guessInput');
+            var guess = parseInt(guessInput.value);
+            var result = document.getElementById('result');
+
+            if (guess < 1 || guess > 20) {
+                result.textContent = 'Invalid input';
+            } else if (guess === num) {
+                result.textContent = 'You are Correct!';
+            } else if (guess < num) {
+                result.textContent = 'You have entered a number less than required';
+            } else if (guess > num) {
+                result.textContent = 'You have entered a number more than required';
+            }
+
+            attempts--;
+
+            if (attempts === 0 || (attempts < successAttempts && guess === num)) {
+                result.textContent += '\nYou loss';
+            } else if (guess === num && attempts >5) {
+                result.textContent += '\nYou Won!';
+            }
+
+            guessInput.value = ''; // Clear input field
+            guessInput.focus(); // Focus back on the input field
+        }
+
+        function restartGame() {
+            num = Math.floor(Math.random() * 20) + 1;
+            attempts = 10;
+            document.getElementById('result').textContent = '';
+            document.getElementById('guessInput').value = '';
+        }
+
+        document.getElementById('guessForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            guessNumber();
+        });
+
+        document.getElementById('guessInput').addEventListener('keyup', function(event) {
+            if (event.keyCode === 13) {
+                event.preventDefault();
+                guessNumber();
+            }
+        });
+    </script>
+</body>
+</html>
